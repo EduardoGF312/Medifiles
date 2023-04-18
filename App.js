@@ -4,6 +4,7 @@ import { MainStackNavigator } from "./src/components/BottomTabNavigator";
 import { EventRegister } from "react-native-event-listeners";
 import ThemeContext from './src/theme/ThemeContext';
 import Theme from "./src/theme/Theme";
+import ModalContext from "./src/components/ModalContext";
 
 const WhiteTheme = {
   ...DefaultTheme,
@@ -23,6 +24,7 @@ const darkTheme = {
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const listener = EventRegister.addEventListener('ChangeTheme', (data) => {
@@ -35,9 +37,11 @@ const App = () => {
 
   return (
     <ThemeContext.Provider value={darkMode === true ? Theme.dark : Theme.light}>
-      <NavigationContainer theme={darkMode === true ? darkTheme : WhiteTheme}>
-        <MainStackNavigator />
-      </NavigationContainer>
+      <ModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
+        <NavigationContainer theme={darkMode === true ? darkTheme : WhiteTheme}>
+          <MainStackNavigator />
+        </NavigationContainer>
+      </ModalContext.Provider>
     </ThemeContext.Provider>
   )
 }

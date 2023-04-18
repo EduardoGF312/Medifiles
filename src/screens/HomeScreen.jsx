@@ -1,17 +1,23 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, useColorScheme, Image } from "react-native";
 import ThemeContext from "../theme/ThemeContext";
 import axios from "axios";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ConfigModal from "../components/ConfigModal";
+import ModalContext from "../components/ModalContext";
+
 
 const HomeScreen = () => {
     const [mensaje, setMensaje] = useState("");
     const [pacientes, setPacientes] = useState("");
     const [registros, setRegistros] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const {isModalOpen, setIsModalOpen} = useContext(ModalContext)
     const theme = useContext(ThemeContext);
 
+    const backgroundStyle = {
+      backgroundColor: isModalOpen ? theme.blurBackground : theme.background,
+    }
+    
     useEffect(() => {
         const getCurrentHour = () => {
           const now = new Date();
@@ -57,17 +63,16 @@ const HomeScreen = () => {
       }, []);
 
     return (
-        <View style={styles.container}>
-            <Icon name="gear" size={30} color="#22c55e" style={{ position: 'absolute', top: 48, zIndex: 1, alignSelf: "flex-end" }} />
+        <View style={[styles.container, backgroundStyle]}>
+            <Icon name="gear" size={30} color={theme.titleColor} style={{ position: 'absolute', top: 48, zIndex: 1, alignSelf: "flex-end", right: 10}} onPress={() => setIsModalOpen(!isModalOpen)}/>
             <Text style={[styles.title, { color: theme.titleColor }]}>{mensaje}</Text>
-            <Button title="Open Modal"></Button>
             <ConfigModal 
                 isModalOpen={isModalOpen} 
                 setIsModalOpen={setIsModalOpen}
-                
             />
             <Text style={{ color: theme.color }}>{pacientes}</Text>
             <Text style={{ color: theme.color }}>{registros}</Text>
+            
         </View>
     );
 };
@@ -75,8 +80,6 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginLeft: 10,
-        marginRight: 10
     },
     title: {
         fontSize: 30,
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
         paddingBottom: 60,
         marginTop: 40,
+        marginLeft: 10,
     },
     input: {
         backgroundColor: "#F6F7FB",
