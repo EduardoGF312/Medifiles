@@ -5,6 +5,7 @@ import axios from "axios";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ConfigModal from "../components/ConfigModal";
 import ModalContext from "../components/ModalContext";
+import Card from "../components/Card";
 
 
 const HomeScreen = () => {
@@ -70,8 +71,8 @@ const HomeScreen = () => {
                 isModalOpen={isModalOpen} 
                 setIsModalOpen={setIsModalOpen}
             />
-            <Text style={{ color: theme.color }}>{pacientes}</Text>
-            <Text style={{ color: theme.color }}>{registros}</Text>
+            <Card title="Número de pacientes" number={pacientes} iconName="people-circle"/>
+            <Card title="Número de registros" number={registros} iconName="today"/>
             
         </View>
     );
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title: {
-        fontSize: 30,
+        fontSize: 33,
         fontWeight: 'bold',
         alignSelf: "flex-start",
         paddingBottom: 60,

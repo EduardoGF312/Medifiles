@@ -7,7 +7,10 @@ const Theme = {
         modalBackground: 'white',
         blurBackground: '#e0e0e0',
         tabBarColor: '#22c55e',
-        tabBarBackground: 'white'
+        tabBarBackground: 'white',
+        iconColor: 'gray',
+        card: '#4ade80',
+        numberCard: 'white',
     },
     dark:{
         theme: 'dark',
@@ -17,7 +20,10 @@ const Theme = {
         modalBackground: '#27272a',   
         blurBackground: '#303030',
         tabBarColor: '#f0fdf4',
-        tabBarBackground: '#1c1c1f'
+        tabBarBackground: '#1c1c1f',
+        iconColor: 'black',
+        card: '#121212',
+        numberCard: 'white',
     },
 }
 

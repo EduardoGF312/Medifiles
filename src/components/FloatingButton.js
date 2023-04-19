@@ -1,14 +1,16 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ThemeContext from "../theme/ThemeContext";
+import { useNavigation } from '@react-navigation/native';
 
 export default function FloatingButton({onIconSelected}) {
     const [animation] = useState(new Animated.Value(0));
     const [open, setOpen] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(null);
     const theme = useContext(ThemeContext);
+    const navigation = useNavigation();
 
     const toggleMenu = () => {
         const toValue = open ? 0 : 1;
@@ -35,7 +37,7 @@ export default function FloatingButton({onIconSelected}) {
             {
                 translateY: animation.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, -80],
+                    outputRange: [0, -70],
                 }),
             },
         ],
@@ -47,7 +49,7 @@ export default function FloatingButton({onIconSelected}) {
             {
                 translateY: animation.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, -140],
+                    outputRange: [0, -105],
                 }),
             },
         ],
@@ -59,7 +61,7 @@ export default function FloatingButton({onIconSelected}) {
             {
                 translateY: animation.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, -200],
+                    outputRange: [0, -70],
                 }),
             },
         ],
@@ -75,20 +77,22 @@ export default function FloatingButton({onIconSelected}) {
     return (
         <View style={[styles.container]}>
             <TouchableWithoutFeedback>
-                <Animated.View style={[styles.button, styles.secondary, heartoStyle, opacity]}>
-                    <AntDesign name='hearto' size={20} color="gray" />
+                <Animated.View style={[styles.button, styles.secondary, heartoStyle, opacity, {left: 45}]}>
+                    <Entypo name='pencil' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback>
                 <Animated.View style={[styles.button, styles.secondary, thumbStyle, opacity]}>
-                    <Entypo name='thumbs-up' size={20} color="gray" />
+                    <Ionicons name='play-forward-outline' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback>
-                <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity]}>
-                    <Entypo name='location-pin' size={20} color="gray" />
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('Registrar');
+            }}>
+                <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity, {right: 45}]}>
+                    <Ionicons name='person-add-outline' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 

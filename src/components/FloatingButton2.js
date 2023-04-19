@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
-import { AntDesign, Entypo } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ThemeContext from "../theme/ThemeContext";
 
@@ -64,13 +63,13 @@ export default function FloatingButton2({onIconSelected}) {
         <View style={[styles.container]}>
             <TouchableWithoutFeedback>
                 <Animated.View style={[styles.button, styles.secondary, thumbStyle, opacity]}>
-                    <Entypo name='thumbs-up' size={20} color="gray" />
+                    <Ionicons name='reader-outline' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback>
                 <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity]}>
-                    <Entypo name='location-pin' size={20} color="gray" />
+                    <Ionicons name='people-outline' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
