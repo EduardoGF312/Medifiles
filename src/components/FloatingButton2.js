@@ -3,13 +3,17 @@ import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'reac
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ThemeContext from "../theme/ThemeContext";
 
-export default function FloatingButton2({onIconSelected}) {
+export default function FloatingButton2({onIconSelected, selectedTabIcon}) {
     const [animation] = useState(new Animated.Value(0));
     const [open, setOpen] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(null);
     const theme = useContext(ThemeContext);
 
     const toggleMenu = () => {
+        if(selectedTabIcon !== null && selectedTabIcon !== 'eye') {
+            return;
+        }
+
         const toValue = open ? 0 : 1;
 
         Animated.spring(animation, {

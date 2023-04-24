@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { StyleSheet, View, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
+import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/core";
 import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
 import RegistrarScreen from "../screens/RegistrarScreen";
@@ -12,6 +13,10 @@ import ThemeContext from "../theme/ThemeContext";
 import ModalContext from "./ModalContext";
 import FloatingButton from "./FloatingButton";
 import FloatingButton2 from "./FloatingButton2";
+import { TouchableOpacity } from "react-native";
+import RegistroAutomatico from '../screens/registrar/RegistroAutomatico'
+import RegistroManual from '../screens/registrar/RegistroManual';
+import RegistroPaciente from '../screens/registrar/RegistroPacientes'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -19,42 +24,32 @@ const Stack = createStackNavigator();
 
 
 export const BottomTabNavigator = () => {
-    const theme = useContext(ThemeContext);
+    // const theme = useContext(ThemeContext);
     const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
     const [selectedTabIcon, setSelectedTabIcon] = useState(null);
     const [isHomeFocused, setIsHomeFocused] = useState(true);
+    const navigation = useNavigation();
 
     const handleIconSelected = (icon) => {
         setSelectedTabIcon(icon);
         setIsHomeFocused(icon === null);
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            const unsubscribe = navigation.addListener('focus', () => {
+                setIsHomeFocused(navigation.getCurrentRoute().name === 'Inicio');
+            });
+
+            return () => {
+                unsubscribe();
+            };
+        }, [navigation])
+    );
+
+
+
     return (
-        // <Tab.Navigator
-        //     screenOptions={({ route }) => ({
-        //         headerShown: false,
-        //         tabBarIcon: ({ focused, color, size }) => {
-        //             let iconName;
-
-        //             if (route.name === "Inicio") {
-        //                 iconName = focused ? "home" : 'home-outline';
-        //             } else if (route.name === "Registrar") {
-        //                 iconName = focused ? "create" : 'create-outline';
-        //             } else if (route.name === "Ver") {
-        //                 iconName = focused ? "eye" : 'eye-outline';
-        //             }
-
-        //             return <Ionicons name={iconName} size={size} color={color} />
-        //         },
-        //         tabBarActiveTintColor: theme.tabBarColor,
-        //         tabBarInactiveTintColor: 'gray',
-        //         tabBarStyle: {backgroundColor: isModalOpen ? theme.blurBackground : theme.tabBarBackground},
-        //     })}
-        // >
-        //     <Tab.Screen name="Inicio" component={HomeScreen}/>
-        //     <Tab.Screen name="Registrar" component={RegistrarScreen} />
-        //     <Tab.Screen name="Ver" component={VisualizarScreen} />
-        // </Tab.Navigator>
         <Tab.Navigator
             initialRouteName="Inicio"
             screenOptions={{
@@ -75,11 +70,14 @@ export const BottomTabNavigator = () => {
                             <Ionicons
                                 name={isHomeFocused ? 'home' : 'home-outline'}
                                 size={25}
-                                color={isHomeFocused ? theme.titleColor : 'gray'}
+                                // color={isHomeFocused ? theme.titleColor : 'gray'}
+                                color={isHomeFocused ? '#4ade80' : 'gray'}
                                 style={styles.tabIcon}
                             />
+                            
                         </View>
                     ),
+                    tabBarButton: (props) => <TouchableOpacity {...props} />,
                 }}
             />
             <Tab.Screen name="Registrar" component={RegistrarScreen}
@@ -89,7 +87,8 @@ export const BottomTabNavigator = () => {
                     },
                     tabBarIcon: () => (
                         <View style={styles.tabIconContainer}>
-                            <FloatingButton onIconSelected={handleIconSelected} />
+                            <FloatingButton onIconSelected={handleIconSelected} selectedTabIcon={selectedTabIcon} />
+                            
                         </View>
                     ),
                 }}
@@ -101,7 +100,44 @@ export const BottomTabNavigator = () => {
                     },
                     tabBarIcon: () => (
                         <View style={styles.tabIconContainer}>
-                            <FloatingButton2 onIconSelected={handleIconSelected}/>
+                            <FloatingButton2 onIconSelected={handleIconSelected} selectedTabIcon={selectedTabIcon} />
+                            
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen name='NuevoPaciente' component={RegistroPaciente}
+                options={{
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    tabBarIcon: () => (
+                        <View style={styles.tabIconContainer}>
+                            <FloatingButton2 onIconSelected={handleIconSelected} selectedTabIcon={selectedTabIcon} />
+                            
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen name='RegistroManual' component={RegistroManual}
+                options={{
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    tabBarIcon: () => (
+                        <View style={styles.tabIconContainer}>
+                            <FloatingButton2 onIconSelected={handleIconSelected} selectedTabIcon={selectedTabIcon} />
+                            
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen name='RegistroAuto' component={RegistroAutomatico}
+                options={{
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    tabBarIcon: () => (
+                        <View style={styles.tabIconContainer}>
+                            <FloatingButton2 onIconSelected={handleIconSelected} selectedTabIcon={selectedTabIcon} />
+                            
                         </View>
                     ),
                 }}
@@ -109,37 +145,6 @@ export const BottomTabNavigator = () => {
         </Tab.Navigator>
     )
 };
-
-const styles = StyleSheet.create({
-    tabBar: {
-        position: "absolute",
-        padding: 0,
-        left: 16,
-        right: 16,
-        bottom: 32,
-        height: 56,
-        borderRadius: 16,
-        borderTopColor: "transparent",
-        shadowColor: '#161719',
-        shadowOffset: {
-            height: 6,
-            width: 0,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 3,
-    },
-    tabIconContainer: {
-        position: "absolute",
-        top: 12,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    tabIcon: {
-        width: 32,
-        height: 32,
-    },
-});
 
 export const MainStackNavigator = () => {
     return (
@@ -157,3 +162,16 @@ export const MainStackNavigator = () => {
         </Stack.Navigator>
     );
 };
+
+const styles = StyleSheet.create({
+    tabIconContainer: {
+        position: "absolute",
+        top: 12,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    tabIcon: {
+        width: 32,
+        height: 32,
+    },
+});

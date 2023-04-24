@@ -5,6 +5,8 @@ import { EventRegister } from "react-native-event-listeners";
 import ThemeContext from './src/theme/ThemeContext';
 import Theme from "./src/theme/Theme";
 import ModalContext from "./src/components/ModalContext";
+import { BottomTabNavigator } from "./src/components/BottomTabNavigator";
+import BottomSheetModalProvider from '@gorhom/bottom-sheet'
 
 const WhiteTheme = {
   ...DefaultTheme,
@@ -39,7 +41,8 @@ const App = () => {
     <ThemeContext.Provider value={darkMode === true ? Theme.dark : Theme.light}>
       <ModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
         <NavigationContainer theme={darkMode === true ? darkTheme : WhiteTheme}>
-          <MainStackNavigator />
+          {/* <MainStackNavigator /> */}
+          <BottomTabNavigator/>
         </NavigationContainer>
       </ModalContext.Provider>
     </ThemeContext.Provider>

@@ -3,11 +3,13 @@ import { View, Text } from "react-native";
 import ThemeContext from "../theme/ThemeContext";
 
 const RegistrarScreen = () => {
-    const theme = useContext(ThemeContext);
+    // const theme = useContext(ThemeContext);
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background}}>
-            <Text style={{color: theme.color}}>Bienvenido a la pantalla de registrar</Text>
+        // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background}}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "white"}}>
+            {/* <Text style={{color: theme.color}}>Bienvenido a la pantalla de registrar</Text> */}
+            <Text style={{color: "black"}}>Bienvenido a la pantalla de registrar</Text>
         </View>
     );
 };

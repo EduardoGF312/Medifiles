@@ -2,7 +2,7 @@ const Theme = {
     light: {
         theme: 'light',
         color: 'black',
-        background: '#ECECEC',
+        background: 'white',
         titleColor: '#22c55e',
         modalBackground: 'white',
         blurBackground: '#e0e0e0',

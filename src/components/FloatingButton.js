@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import ThemeContext from "../theme/ThemeContext";
 import { useNavigation } from '@react-navigation/native';
 
-export default function FloatingButton({onIconSelected}) {
+export default function FloatingButton({onIconSelected, selectedTabIcon}) {
     const [animation] = useState(new Animated.Value(0));
     const [open, setOpen] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(null);
@@ -13,6 +13,10 @@ export default function FloatingButton({onIconSelected}) {
     const navigation = useNavigation();
 
     const toggleMenu = () => {
+        if(selectedTabIcon !== null && selectedTabIcon !== 'create') {
+            return;
+        }
+
         const toValue = open ? 0 : 1;
 
         Animated.spring(animation, {
@@ -76,20 +80,24 @@ export default function FloatingButton({onIconSelected}) {
 
     return (
         <View style={[styles.container]}>
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('RegistroManual');
+            }}>
                 <Animated.View style={[styles.button, styles.secondary, heartoStyle, opacity, {left: 45}]}>
                     <Entypo name='pencil' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('RegistroAuto');
+            }}>
                 <Animated.View style={[styles.button, styles.secondary, thumbStyle, opacity]}>
                     <Ionicons name='play-forward-outline' size={20} color={theme.iconColor} />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={() => {
-                navigation.navigate('Registrar');
+                navigation.navigate('NuevoPaciente');
             }}>
                 <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity, {right: 45}]}>
                     <Ionicons name='person-add-outline' size={20} color={theme.iconColor} />
