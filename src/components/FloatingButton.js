@@ -9,7 +9,6 @@ export default function FloatingButton({onIconSelected, selectedTabIcon}) {
     const [animation] = useState(new Animated.Value(0));
     const [open, setOpen] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(null);
-    const theme = useContext(ThemeContext);
     const navigation = useNavigation();
 
     const toggleMenu = () => {
@@ -84,7 +83,7 @@ export default function FloatingButton({onIconSelected, selectedTabIcon}) {
                 navigation.navigate('RegistroManual');
             }}>
                 <Animated.View style={[styles.button, styles.secondary, heartoStyle, opacity, {left: 45}]}>
-                    <Entypo name='pencil' size={20} color={theme.iconColor} />
+                    <Entypo name='pencil' size={20} color='gray' />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
@@ -92,7 +91,7 @@ export default function FloatingButton({onIconSelected, selectedTabIcon}) {
                 navigation.navigate('RegistroAuto');
             }}>
                 <Animated.View style={[styles.button, styles.secondary, thumbStyle, opacity]}>
-                    <Ionicons name='play-forward-outline' size={20} color={theme.iconColor} />
+                    <Ionicons name='play-forward-outline' size={20} color='gray' />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
@@ -100,7 +99,7 @@ export default function FloatingButton({onIconSelected, selectedTabIcon}) {
                 navigation.navigate('NuevoPaciente');
             }}>
                 <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity, {right: 45}]}>
-                    <Ionicons name='person-add-outline' size={20} color={theme.iconColor} />
+                    <Ionicons name='person-add-outline' size={20} color='gray' />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
@@ -108,7 +107,7 @@ export default function FloatingButton({onIconSelected, selectedTabIcon}) {
                 <Animated.View>
                     <Ionicons
                         name={selectedIcon === "create" ? 'create' : 'create-outline'}
-                        color={selectedIcon === "create" ? theme.titleColor : 'gray'}
+                        color={selectedIcon === "create" ? '#22c55e' : 'gray'}
                         size={25}
                     />
                 </Animated.View>
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         shadowRadius: 10,
-        shadowColor: "F02A4B",
+        shadowColor: "#F02A4B",
         shadowOpacity: 0.3,
         shadowOffset: { height: 10 },
     },

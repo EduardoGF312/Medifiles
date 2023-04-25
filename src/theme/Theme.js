@@ -2,7 +2,7 @@ const Theme = {
     light: {
         theme: 'light',
         color: 'black',
-        background: 'white',
+        background: '#fefefe',
         titleColor: '#22c55e',
         modalBackground: 'white',
         blurBackground: '#e0e0e0',
@@ -10,20 +10,26 @@ const Theme = {
         tabBarBackground: 'white',
         iconColor: 'gray',
         card: '#4ade80',
+        form: 'white',
         numberCard: 'white',
+        input: '#F6F7FB',
+        label: 'black',
     },
     dark:{
         theme: 'dark',
         color: 'white',
         background: '#2B2B2B',
-        titleColor: '#f0fdf4',
+        titleColor: 'white',
         modalBackground: '#27272a',   
         blurBackground: '#303030',
         tabBarColor: '#f0fdf4',
         tabBarBackground: '#1c1c1f',
         iconColor: 'black',
         card: '#121212',
+        form: "#121212",
         numberCard: 'white',
+        input: '#E0E0E0',
+        label: 'white'
     },
 }
 

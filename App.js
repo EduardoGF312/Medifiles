@@ -1,52 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { DarkTheme, NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { MainStackNavigator } from "./src/components/BottomTabNavigator";
-import { EventRegister } from "react-native-event-listeners";
-import ThemeContext from './src/theme/ThemeContext';
-import Theme from "./src/theme/Theme";
-import ModalContext from "./src/components/ModalContext";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import { BottomTabNavigator } from "./src/components/BottomTabNavigator";
-import BottomSheetModalProvider from '@gorhom/bottom-sheet'
+import Toast from 'react-native-toast-message';
 
-const WhiteTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'white',
-  },
-};
-
-const darkTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    background: '#3f3f46',
-  }
-}
-
-const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    const listener = EventRegister.addEventListener('ChangeTheme', (data) => {
-      setDarkMode(data);
-    })
-    return () => {
-      EventRegister.removeAllListeners(listener)
-    }
-  }, [darkMode])
+export default function App(){
 
   return (
-    <ThemeContext.Provider value={darkMode === true ? Theme.dark : Theme.light}>
-      <ModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
-        <NavigationContainer theme={darkMode === true ? darkTheme : WhiteTheme}>
-          {/* <MainStackNavigator /> */}
-          <BottomTabNavigator/>
-        </NavigationContainer>
-      </ModalContext.Provider>
-    </ThemeContext.Provider>
-  )
+    <NavigationContainer>
+      <BottomTabNavigator />
+      <Toast/>
+    </NavigationContainer>
+  );
 }
-
-export default App

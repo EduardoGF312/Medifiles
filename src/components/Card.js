@@ -1,19 +1,16 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import ThemeContext from "../theme/ThemeContext";
 import { Ionicons } from '@expo/vector-icons';
 
 const Card = ({ title, number, iconName }) => {
-    const theme = useContext(ThemeContext);
-
     return (
-        <View style={[styles.card, { backgroundColor: theme.card }]}>
+        <View style={[styles.card, { backgroundColor: '#4ade80' }]}>
             <View style={styles.content}>
-                <Text style={[styles.title, { color: theme.numberCard }]}>{title}</Text>
-                <Text style={[styles.number, { color: theme.numberCard }]}>{number}</Text>
+                <Text style={[styles.title, { color: 'white' }]}>{title}</Text>
+                <Text style={[styles.number, { color: 'white' }]}>{number}</Text>
                 {iconName && (
                     <View style={styles.iconContainer}>
-                        <Ionicons name={iconName} size={45} color={theme.numberCard} />
+                        <Ionicons name={iconName} size={45} color='white' />
                     </View>
                 )}
             </View>

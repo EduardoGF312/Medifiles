@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import ThemeContext from "../theme/ThemeContext";
+import { useNavigation } from '@react-navigation/native';
 
 export default function FloatingButton2({onIconSelected, selectedTabIcon}) {
     const [animation] = useState(new Animated.Value(0));
     const [open, setOpen] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState(null);
-    const theme = useContext(ThemeContext);
+    const navigation = useNavigation();
 
     const toggleMenu = () => {
         if(selectedTabIcon !== null && selectedTabIcon !== 'eye') {
@@ -65,15 +65,20 @@ export default function FloatingButton2({onIconSelected, selectedTabIcon}) {
 
     return (
         <View style={[styles.container]}>
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('VerRegistro');
+            }}>
                 <Animated.View style={[styles.button, styles.secondary, thumbStyle, opacity]}>
-                    <Ionicons name='reader-outline' size={20} color={theme.iconColor} />
+                    <Ionicons name='reader-outline' size={20} color='gray' />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => {
+                navigation.navigate('VerPaciente');
+            }}
+            >
                 <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity]}>
-                    <Ionicons name='people-outline' size={20} color={theme.iconColor} />
+                    <Ionicons name='people-outline' size={20} color='gray' />
                 </Animated.View>
             </TouchableWithoutFeedback>
 
@@ -81,7 +86,7 @@ export default function FloatingButton2({onIconSelected, selectedTabIcon}) {
                 <Animated.View>
                     <Ionicons
                         name={selectedIcon === "eye" ? 'eye' : 'eye-outline'}
-                        color={selectedIcon === "eye" ? theme.titleColor : 'gray'}
+                        color={selectedIcon === "eye" ? '#22c55e' : 'gray'}
                         size={25}
                     />
                 </Animated.View>

@@ -26,7 +26,8 @@ export default {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.natakong.MediFiles"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,6 +39,9 @@ export default {
       storageBucket: process.env.STORAGE_BUCKET,
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
+      "eas": {
+        "projectId": "1156f22b-636e-409b-ad8e-a9d1554311cf"
+      }
     }
   }
 }

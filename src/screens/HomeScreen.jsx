@@ -2,9 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button, useColorScheme, Image } from "react-native";
 import ThemeContext from "../theme/ThemeContext";
 import axios from "axios";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import ConfigModal from "../components/ConfigModal";
-import ModalContext from "../components/ModalContext";
 import Card from "../components/Card";
 
 
@@ -12,13 +9,7 @@ const HomeScreen = () => {
     const [mensaje, setMensaje] = useState("");
     const [pacientes, setPacientes] = useState("");
     const [registros, setRegistros] = useState("");
-    const {isModalOpen, setIsModalOpen} = useContext(ModalContext)
-    const theme = useContext(ThemeContext);
 
-    const backgroundStyle = {
-      backgroundColor: isModalOpen ? theme.blurBackground : theme.background,
-    }
-    
     useEffect(() => {
         const getCurrentHour = () => {
           const now = new Date();
@@ -64,16 +55,10 @@ const HomeScreen = () => {
       }, []);
 
     return (
-        <View style={[styles.container, backgroundStyle]}>
-            <Icon name="gear" size={30} color={theme.titleColor} style={{ position: 'absolute', top: 48, zIndex: 1, alignSelf: "flex-end", right: 10}} onPress={() => setIsModalOpen(!isModalOpen)}/>
-            <Text style={[styles.title, { color: theme.titleColor }]}>{mensaje}</Text>
-            <ConfigModal 
-                isModalOpen={isModalOpen} 
-                setIsModalOpen={setIsModalOpen}
-            />
+        <View style={[styles.container]}>
+            <Text style={[styles.title, { color: '#22c55e' }]}>{mensaje}</Text>
             <Card title="Número de pacientes" number={pacientes} iconName="people-circle"/>
             <Card title="Número de registros" number={registros} iconName="today"/>
-            
         </View>
     );
 };
@@ -87,7 +72,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: "flex-start",
         paddingBottom: 60,
-        marginTop: 40,
+        marginTop: 45,
         marginLeft: 10,
     },
     input: {

@@ -1,41 +1,50 @@
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
+import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
-const RegistroPacientes = () => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [genero, setGenero] = useState('');
-  const [edad, setEdad] = useState('');
-  const [carrera, setCarrera] = useState('');
-  const [cuatri, setCuatri] = useState('');
-  const [grupo, setGrupo] = useState('');
-  const [padecimiento, setPadecimiento] = useState('');
-  const [medicamento, setMedicamento] = useState('');
-  const [observacion, setObservacion] = useState('');
+const RegistroManual = () => {
+  const route = useRoute();
+  const pacienteActual = route.params.pacienteActual;
+  const [nombre, setNombre] = useState(pacienteActual.nombre);
+  const [apellido, setApellido] = useState(pacienteActual.apellido);
+  const [genero, setGenero] = useState(pacienteActual.genero);
+  const [edad, setEdad] = useState(pacienteActual.edad ? pacienteActual.edad.toString() : '');
+  const [cuatri, setCuatri] = useState(pacienteActual.cuatrimestre ? pacienteActual.cuatrimestre.toString() : '');
+  const [carrera, setCarrera] = useState(pacienteActual.carrera);
+  const [grupo, setGrupo] = useState(pacienteActual.grupo);
+  const [padecimiento, setPadecimiento] = useState(pacienteActual.padecimiento);
+  const [medicamento, setMedicamento] = useState(pacienteActual.medicamento);
+  const [observacion, setObservacion] = useState(pacienteActual.observaciones);
   const navigation = useNavigation();
 
-  const sendFormData = async () => {
-    if (!nombre || !apellido || !genero || !edad || !carrera || !cuatri || !grupo || !padecimiento || !medicamento || !observacion) {
-      Toast.show({
-        type: 'error',
-        text1: 'Campos incompletos',
-        text2: 'Por favor, completa todos los campos del formulario',
-      });
-      return;
+  useEffect(() => {
+    if (pacienteActual.edad) {
+      setEdad(pacienteActual.edad.toString());
     }
+    if (pacienteActual.cuatrimestre) {
+      setCuatri(pacienteActual.cuatrimestre.toString());
+    }
+  }, [pacienteActual.edad, pacienteActual.cuatrimestre])
 
+  const handleGoBack = () => {
+    navigation.navigate('VerPaciente');
+  }
+
+  const sendFormData = async () => {
     const formData = {
       nombre: nombre,
       apellido: apellido,
       genero: genero,
-      edad: edad,
+      edad: parseInt(edad, 10),
       carrera: carrera,
-      cuatrimestre: cuatri,
+      cuatrimestre: parseInt(cuatri, 10),
       grupo: grupo,
       padecimiento: padecimiento,
       medicamento: medicamento,
@@ -43,27 +52,17 @@ const RegistroPacientes = () => {
     }
 
     try {
-      const response = await axios.post('https://integradora.fly.dev/pacientes', formData)
+      const response = await axios.patch(`https://integradora.fly.dev/pacientes/modificar/${pacienteActual._id}`, formData)
       Toast.show({
         type: 'success',
-        text1: 'Paciente agregado',
+        text1: 'Paciente modificado con éxito',
       });
-      setNombre('');
-      setApellido('');
-      setGenero('');
-      setEdad('');
-      setCarrera('');
-      setCuatri('');
-      setGrupo('');
-      setPadecimiento('');
-      setMedicamento('');
-      setObservacion('');
       navigation.navigate('VerPaciente');
     } catch (error) {
       console.error(error)
       Toast.show({
         type: 'error',
-        text1: 'Error al guardar al paciente',
+        text1: 'Error al modificar al paciente',
       });
     }
   }
@@ -74,24 +73,27 @@ const RegistroPacientes = () => {
 
   return (
     <ScrollView style={[styles.container]}>
-      <Text style={[styles.title, { color: '#22c55e' }]}>Nuevo Paciente</Text>
+      <View style={styles.titleAndIcon}>
+        <Icon name='arrow-left' size={30} color='#22c55e' onPress={handleGoBack} style={{ flexDirection: 'row', justifyContent: 'space-between', width: 55, marginTop: 48, paddingStart: 12 }} />
+        <Text style={[styles.title, { color: '#22c55e', paddingEnd: 100 }]}>Editar Paciente</Text>
+      </View>
 
-      <View style={[styles.form]}>
-        <Text style={styles.subTitle}>Información general</Text>
-        <Text style={[styles.label]}>Nombre(s): </Text>
+      <View style={styles.part1}>
+
+        <Text style={styles.label}>Nombre:</Text>
         <TextInput
+          style={styles.input}
           value={nombre}
-          onChangeText={setNombre}
-          placeholder="Nombre"
-          style={styles.input}
+          onChangeText={(text) => setNombre(text)}
         />
-        <Text style={[styles.label]}>Apellido(s): </Text>
+
+        <Text style={styles.label}>Apellido:</Text>
         <TextInput
-          value={apellido}
-          onChangeText={setApellido}
-          placeholder="Apellidos"
           style={styles.input}
+          value={apellido}
+          onChangeText={(text) => setApellido(text)}
         />
+
         <Text style={[styles.label]}>Género:</Text>
         <Picker
           selectedValue={genero}
@@ -103,18 +105,15 @@ const RegistroPacientes = () => {
           <Picker.Item label='Femenino' value="Femenino" />
           <Picker.Item label='Otro' value="Otro" />
         </Picker>
+
         <Text style={[styles.label]}>Edad:</Text>
         <TextInput
           value={edad}
           onChangeText={setEdad}
-          placeholder="Edad"
           keyboardType="number-pad"
           style={styles.input}
         />
-      </View>
 
-      <View style={[styles.form]}>
-        <Text style={styles.subTitle}>Información curricular</Text>
         <Text style={[styles.label]}>Carrera: </Text>
         <Picker
           selectedValue={carrera}
@@ -139,53 +138,49 @@ const RegistroPacientes = () => {
           <Picker.Item label='Licenciatura en gestión institucional, educativa y curricular' value="Licenciatura en gestión institucional, educativa y curricular" />
           <Picker.Item label='Licenciatura en innovación de negocios y mercadotecnia' value="Licenciatura en innovación de negocios y mercadotecnia" />
         </Picker>
+
         <Text style={[styles.label]}>Cuatrimestre: </Text>
         <TextInput
           value={cuatri}
           onChangeText={setCuatri}
-          placeholder="Cuatrimestre"
           keyboardType="number-pad"
           style={styles.input}
         />
-        <Text style={[styles.label]}>Grupo: </Text>
-        <Picker
-          selectedValue={grupo}
-          onValueChange={(itemValue) => setGrupo(itemValue)}
-          style={styles.input}
-        >
-          <Picker.Item label='Selecciona un grupo' value={null} />
-          <Picker.Item label='A' value="A" />
-          <Picker.Item label='B' value="B" />
-        </Picker>
-      </View>
 
-      <View style={[styles.form, {marginBottom: 35}]}>
-        <Text style={styles.subTitle}>Historia médica</Text>
-        <Text style={[styles.label]}>Padecimiento:</Text>
+        <Text style={styles.label}>Grupo:</Text>
         <TextInput
+          style={styles.input}
+          value={grupo}
+          onChangeText={(text) => setGrupo(text)}
+        />
+
+        <Text style={styles.label}>Padecimiento:</Text>
+        <TextInput
+          style={styles.input}
           value={padecimiento}
-          onChangeText={setPadecimiento}
-          placeholder="Padecimiento"
-          style={styles.input}
+          onChangeText={(text) => setPadecimiento(text)}
         />
-        <Text style={[styles.label]}>Medicamento:</Text>
+
+        <Text style={styles.label}>Medicamento:</Text>
         <TextInput
-          value={medicamento}
-          onChangeText={setMedicamento}
-          placeholder="Medicamento"
           style={styles.input}
+          value={medicamento}
+          onChangeText={(text) => setMedicamento(text)}
         />
-        <Text style={[styles.label]}>Observaciones:</Text>
+
+        <Text style={styles.label}>Observaciones:</Text>
         <TextInput
           value={observacion}
-          onChangeText={setObservacion}
-          placeholder="Observaciones"
+          onChangeText={(text) => setObservacion(text)}
           style={styles.input}
+          multiline={true}
+          numberOfLines={4}
         />
+
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Subir</Text>
+        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Actualizar</Text>
       </TouchableOpacity>
 
 
@@ -193,12 +188,11 @@ const RegistroPacientes = () => {
   )
 }
 
-export default RegistroPacientes
+export default RegistroManual
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fefefe',
   },
   title: {
     fontSize: 33,
@@ -219,12 +213,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10
   },
-  form: {
+  part1: {
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
     margin: 10,
-    marginBottom: 5,
+    marginBottom: 30,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -242,6 +236,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     paddingStart: 10
+  },
+  titleAndIcon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: -2,
+  },
+  form: {
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 30,
   },
   button: {
     backgroundColor: '#22c55e',

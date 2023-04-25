@@ -1,15 +1,14 @@
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native'
-import React, { useState, useContext, useEffect } from 'react'
-import ThemeContext from '../../theme/ThemeContext'
+import React, { useState, useEffect } from 'react'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-
+import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 const RegistroAutomatico = () => {
-  const theme = useContext(ThemeContext);
   const [fecha, setFecha] = useState('');
   const [alumnos, setAlumnos] = useState([]);
   const [bpm, setBPM] = useState(null);
@@ -18,6 +17,7 @@ const RegistroAutomatico = () => {
   const [observacion, setObservacion] = useState('');
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
 
@@ -43,9 +43,12 @@ const RegistroAutomatico = () => {
       }
     };
 
-    getAlumnos()
+    const fetchDataAndGetAlumnos = async () => {
+      await fetchData();
+      await getAlumnos();
+    }
 
-    const interval = setInterval(fetchData, 1000);
+    const interval = setInterval(fetchDataAndGetAlumnos, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -67,12 +70,19 @@ const RegistroAutomatico = () => {
 
     // Si no se encuentra el alumno, muestra un mensaje de error y retorna
     if (!alumnoSeleccionado) {
-      alert('Error: Alumno no encontrado');
+      Toast.show({
+        type: 'error',
+        text1: 'Por favor, selecciona a un alumno',
+      })
       return;
     }
 
     if (!fecha) {
-      alert("Por favor, completa todos los campos");
+      Toast.show({
+        type: 'error',
+        text1: 'Campos incompletos',
+        text2: 'Por favor, completa todos los campos del formulario',
+      });
       return;
     }
 
@@ -88,12 +98,20 @@ const RegistroAutomatico = () => {
 
     try {
       const response = await axios.post('https://integradora.fly.dev/registros', formData)
-      alert('Registro agregado');
+      Toast.show({
+        type: 'success',
+        text1: 'Registro guardado con éxito',
+      });
       setFecha('');
+      setAlumnos([]);
       setObservacion('');
+      navigation.navigate('VerRegistro');
     } catch (error) {
       console.error(error)
-      alert('Error al guardar el registro')
+      Toast.show({
+        type: 'error',
+        text1: 'Error al guardar el registro',
+      });
     }
   }
 
@@ -103,7 +121,7 @@ const RegistroAutomatico = () => {
 
   return (
     <ScrollView style={[styles.container]}>
-      <Text style={[styles.title, { color: theme.titleColor }]}>Registro Automático</Text>
+      <Text style={[styles.title, { color: '#22c55e' }]}>Registro Automático</Text>
 
       <View style={styles.part1}>
         <Text style={styles.label}>Fecha:</Text>
@@ -234,6 +252,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    top: -10
+    top: -15
   },
 })
